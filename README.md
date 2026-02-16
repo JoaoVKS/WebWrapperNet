@@ -15,4 +15,5 @@ O WebWrapper irá:
 
 ## Requisitos
 
-- .NET 10
+- .NET 10 — https://dotnet.microsoft.com/en-us/download/dotnet/10.0
+- WebView2 Runtime — https://developer.microsoft.com/en-us/microsoft-edge/webview2/
