@@ -1,4 +1,5 @@
-# WebWrapperNet
+# <img width="50px" height="40px" alt="icon" src="https://github.com/user-attachments/assets/6ad63636-804e-49f2-b1b7-dc414d72e35f" /> WebWrapperNet
+
 
 A simple wrapper to turn web applications into desktop applications using WebView.
 
@@ -28,7 +29,7 @@ WebWrapper will:
 
 ---
 
-# WebWrapperNet
+# <img width="50px" height="40px" alt="icon" src="https://github.com/user-attachments/assets/6ad63636-804e-49f2-b1b7-dc414d72e35f" /> WebWrapperNet
 
 Um wrapper simples para transformar aplicações web em aplicações desktop usando WebView.
 
