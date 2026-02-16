@@ -14,6 +14,8 @@ Or
 2. Extract the contents where your `index.html` is located
 3. Run the extracted `.exe`
 
+See the folder SampleProject for an example of how to use WebWrapperNet in a project.
+
 WebWrapper will:
 - Open a window with the `index.html` content using the `file://` protocol
 - Automatically load the page title and icon
@@ -41,6 +43,8 @@ Ou
 1. Baixe o `.zip` da última release
 2. Extraia o conteúdo na pasta onde está o `index.html`
 3. Execute o `.exe` extraído
+
+Veja a pasta SampleProject para um exemplo de como usar o WebWrapperNet em um projeto.
 
 O WebWrapper irá:
 - Abrir uma janela com o conteúdo do `index.html` usando o protocolo `file://`
