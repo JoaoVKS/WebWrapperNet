@@ -20,6 +20,7 @@ namespace WebWrap
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             InitializeComponent();
+            TitleBarController.EnableDarkMode(Handle);
             _ = InitializeWebViewAsync();
         }
 

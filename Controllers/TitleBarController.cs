@@ -9,6 +9,23 @@ namespace WebWrap.Controllers
 {
     public class TitleBarController
     {
+        [DllImport("dwmapi.dll", PreserveSig = true)]
+        private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
+
+        private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
+
+        public static void EnableDarkMode(IntPtr handle)
+        {
+            try
+            {
+                int darkMode = 1;
+                DwmSetWindowAttribute(handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref darkMode, sizeof(int));
+            }
+            catch
+            {
+                // ignore if dark mode is not supported
+            }
+        }
         public static async Task<Icon?> TryLoadIconFromUrlAsync(string url, HttpClient httpClient)
         {
             if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
