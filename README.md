@@ -4,7 +4,7 @@ Um wrapper simples para transformar aplicações web em aplicações desktop usa
 
 ## Como usar
 
-1. Compile o projeto (o `.exe` será gerado em `bin\Debug\net10.0-windows\` ou `bin\Release\net10.0-windows\`)
+1. Publique o projeto (ex.: `dotnet publish -c Release -r win-x64 --self-contained`) —> o `.exe` será gerado em `bin\Release\net10.0-windows\win-x64\publish\WebWrap\`
 2. Coloque o `.exe` gerado na mesma pasta do seu `index.html`
 3. Execute o `.exe`
 
