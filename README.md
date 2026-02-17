@@ -4,6 +4,9 @@
 A simple wrapper to turn web applications into desktop applications using WebView.
 
 ## How to use
+1. Open the powershell in your `index.html` folder and run: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/v1.0.0/WebWrapperNet_EXE.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
+
+Or
 
 1. Publish the project (e.g.: `dotnet publish -c Release -r win-x64 --self-contained`) — the `.exe` will be generated at `bin\Release\net10.0-windows\win-x64\publish\WebWrap\`
 2. Place the generated `.exe` in the same folder as your `index.html`
@@ -34,6 +37,9 @@ WebWrapper will:
 Um wrapper simples para transformar aplicações web em aplicações desktop usando WebView.
 
 ## Como usar
+1. Abra o powershell na pasta do seu `index.html` e execute o comando: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/v1.0.0/WebWrapperNet_EXE.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
+
+Ou
 
 1. Publique o projeto (ex.: `dotnet publish -c Release -r win-x64 --self-contained`) —> o `.exe` será gerado em `bin\Release\net10.0-windows\win-x64\publish\WebWrap\`
 2. Coloque o `.exe` gerado na mesma pasta do seu `index.html`
