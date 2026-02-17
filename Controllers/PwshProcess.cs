@@ -146,17 +146,33 @@ namespace WebWrap.Controllers
 
             if (disposing)
             {
-                _inputWriter?.Close();
-                _inputWriter?.Dispose();
+                try
+                {
+                    _inputWriter?.Close();
+                    _inputWriter?.Dispose();
+                }
+                catch
+                {
+                    // Ignore errors when closing input
+                }
+
+                if (_psProcess != null && !_psProcess.HasExited)
+                {
+                    try
+                    {
+                        _psProcess.Kill();
+                        _psProcess.WaitForExit(TimeSpan.FromSeconds(2));
+                    }
+                    catch
+                    {
+                        // Ignore errors
+                    }
+                }
+
                 _psProcess?.Dispose();
             }
 
             _disposed = true;
-        }
-
-        ~PwshProcess()
-        {
-            Dispose(false);
         }
     }
 }

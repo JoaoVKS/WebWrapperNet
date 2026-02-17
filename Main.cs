@@ -93,7 +93,7 @@ namespace WebWrap
                             {
                                 Type = returnType,
                                 Status = 0,
-                                Output = "PowerShell started successfully"
+                                Output = "Pwsh started successfully"
                             }, options));
                         }
                         catch
@@ -114,8 +114,8 @@ namespace WebWrap
                             if(string.IsNullOrEmpty(command))
                                 throw new Exception("Invalid command");
 
-                            var process = processList.FirstOrDefault(p => p.RequestId == requestId && p.IsRunning);
-                            if (process == null)
+                            var inputProcess = processList.FirstOrDefault(p => p.RequestId == requestId && p.IsRunning);
+                            if (inputProcess == null)
                             {
                                 PwshProcess newWindow = new PwshProcess(requestId, "window-" + requestId, false, false)
                                 {
@@ -134,12 +134,12 @@ namespace WebWrap
                             }
                             else
                             {
-                                process.ExecuteCommand(command);
+                                inputProcess.ExecuteCommand(command);
                                 webView.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new PwshResult(requestId)
                                 {
                                     Type = returnType,
                                     Status = 0,
-                                    IsRunning = process.IsRunning,
+                                    IsRunning = inputProcess.IsRunning,
                                     Output = "Running command"
                                 }, options));
                             }
@@ -152,6 +152,30 @@ namespace WebWrap
                                 Status = 1,
                                 Output = ex.Message,
                             }, options));
+                        }
+                        break;
+                    case "pwshKil":
+                        returnType = "pwshResult";
+                        var processToKill = processList.FirstOrDefault(p => p.RequestId == requestId && p.IsRunning);
+                        if (processToKill == null)
+                        {
+                            webView.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new PwshResult(requestId)
+                            {
+                                Type = returnType,
+                                Status = 1,
+                                Output = "Pwsh process not found or already stopped",
+                            }, options));
+                        }
+                        else
+                        {
+                            processToKill.Dispose();
+                            webView.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new PwshResult(requestId)
+                            {
+                                Type = returnType,
+                                Status = 0,
+                                Output = "Pwsh process killed successfully",
+                            }, options));
+
                         }
                         break;
                     default:
