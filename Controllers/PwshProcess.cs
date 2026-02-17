@@ -12,6 +12,7 @@ namespace WebWrap.Controllers
         private readonly StringBuilder _outputLog;
         private readonly object _outputLock = new object();
         private bool _disposed = false;
+        private int _lastSentOutputLength = 0;
 
         public string Name { get; set; }
         public int PID { get; set; }
@@ -55,7 +56,7 @@ namespace WebWrap.Controllers
                 RedirectStandardError = true,
                 UseShellExecute = false,
                 //false for debugging, true for production to avoid console window
-                CreateNoWindow = false,
+                CreateNoWindow = true,
                 StandardOutputEncoding = Encoding.UTF8
             };
 
@@ -122,6 +123,26 @@ namespace WebWrap.Controllers
             }
         }
 
+        public void StopCommand()
+        {
+            if (_disposed)
+                throw new ObjectDisposedException(nameof(PwshProcess));
+
+            if (!IsRunning)
+                throw new InvalidOperationException("Process is not running.");
+
+            try
+            {
+                // Send Ctrl+C (ASCII 3) to interrupt the current command
+                _inputWriter?.Write("\u0003");
+                _inputWriter?.Flush();
+            }
+            catch (IOException ex)
+            {
+                throw new InvalidOperationException("Failed to stop command.", ex);
+            }
+        }
+
         public string GetAllOutput()
         {
             if (_disposed)
@@ -130,6 +151,22 @@ namespace WebWrap.Controllers
             lock (_outputLock)
             {
                 return _outputLog.ToString();
+            }
+        }
+
+        public string GetIncrementalOutput()
+        {
+            if (_disposed)
+                return string.Empty;
+
+            lock (_outputLock)
+            {
+                if (_outputLog.Length <= _lastSentOutputLength)
+                    return string.Empty;
+
+                string incrementalOutput = _outputLog.ToString(_lastSentOutputLength, _outputLog.Length - _lastSentOutputLength);
+                _lastSentOutputLength = _outputLog.Length;
+                return incrementalOutput;
             }
         }
 

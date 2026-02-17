@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SamplePwshSupport</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <header class="app-header">
+        <div class="app-title">
+            <h1>SamplePwshSupport</h1>
+            <p>WebWrapper PowerShell Multi-Instance</p>
+        </div>
+        <button id="new-instance" class="primary-btn">New PowerShell Instance</button>
+    </header>
+
+    <main>
+        <section id="card-grid" class="card-grid" aria-live="polite"></section>
+    </main>
+
+    <template id="pwsh-card-template">
+        <article class="pwsh-card" draggable="true">
+            <div class="card-header">
+                <span class="card-title"></span>
+                <span class="status-badge">running</span>
+                <button class="stop-btn" title="Stop Command (Ctrl+C)">■</button>
+                <button class="kill-btn" title="Kill">×</button>
+            </div>
+            <div class="card-body">
+                <pre class="output" aria-live="polite"></pre>
+            </div>
+            <div class="card-footer">
+                <input class="command-input" type="text" placeholder="Digite um comando PowerShell..." />
+                <button class="send-btn">Send</button>
+            </div>
+            <div class="drag-handle">Drag</div>
+        </article>
+    </template>
+
+    <script src="webWrap.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

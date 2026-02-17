@@ -1,0 +1,206 @@
+:root {
+    color-scheme: dark;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: radial-gradient(circle at top, #1f2937 0%, #0b1220 60%);
+    color: #e2e8f0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 32px;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.app-title h1 {
+    margin: 0;
+    font-size: 1.6rem;
+}
+
+.app-title p {
+    margin: 4px 0 0;
+    color: #94a3b8;
+}
+
+.primary-btn {
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    border: none;
+    color: #0f172a;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.primary-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 30px rgba(14, 165, 233, 0.35);
+}
+
+main {
+    flex: 1;
+    padding: 24px 32px 40px;
+}
+
+.card-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.pwsh-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 16px;
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.35);
+    backdrop-filter: blur(12px);
+    min-height: 600px;
+    animation: fadeIn 0.3s ease;
+}
+
+.pwsh-card.dragging {
+    opacity: 0.6;
+    border-color: #38bdf8;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-title {
+    font-weight: 600;
+    flex: 1;
+}
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    background: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+    text-transform: uppercase;
+}
+
+.status-badge.stopped {
+    background: rgba(248, 113, 113, 0.2);
+    color: #f87171;
+}
+
+.kill-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.stop-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.stop-btn:hover {
+    color: #f59e0b;
+}
+
+.card-body {
+    flex: 1;
+    background: rgba(15, 23, 42, 0.6);
+    border-radius: 12px;
+    padding: 10px;
+    max-height: 500px;
+    overflow: auto;
+}
+
+.output {
+    margin: 0;
+    font-family: "Consolas", "Courier New", monospace;
+    color: #22d3ee;
+    white-space: pre-wrap;
+}
+
+.card-footer {
+    display: flex;
+    gap: 8px;
+}
+
+.command-input {
+    flex: 1;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 8px;
+    color: #e2e8f0;
+    padding: 8px 10px;
+}
+
+.send-btn {
+    background: #0f172a;
+    border: 1px solid rgba(148, 163, 184, 0.4);
+    color: #e2e8f0;
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+.drag-handle {
+    position: absolute;
+    bottom: 8px;
+    right: 12px;
+    font-size: 0.7rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 900px) {
+    .app-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+    
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .pwsh-card {
+        min-height: 400px;
+    }
+}
