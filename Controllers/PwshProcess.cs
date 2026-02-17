@@ -1,12 +1,29 @@
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using WebWrap.Models;
 
 namespace WebWrap.Controllers
 {
     public class PwshProcess : BaseModel, IDisposable
     {
+        // P/Invoke declarations for Windows API
+        private const uint CTRL_C_EVENT = 0;
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool AttachConsole(uint dwProcessId);
+
+        [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
+        private static extern bool FreeConsole();
+
+        [DllImport("kernel32.dll")]
+        private static extern bool SetConsoleCtrlHandler(IntPtr handler, bool add);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool GenerateConsoleCtrlEvent(uint dwCtrlEvent, uint dwProcessGroupId);
+
         private Process _psProcess;
         private StreamWriter _inputWriter;
         private readonly StringBuilder _outputLog;
@@ -125,21 +142,23 @@ namespace WebWrap.Controllers
 
         public void StopCommand()
         {
-            if (_disposed)
-                throw new ObjectDisposedException(nameof(PwshProcess));
-
-            if (!IsRunning)
-                throw new InvalidOperationException("Process is not running.");
-
             try
             {
-                // Send Ctrl+C (ASCII 3) to interrupt the current command
-                _inputWriter?.Write("\u0003");
-                _inputWriter?.Flush();
+                // Try to send Ctrl+C by writing to StandardInput
+                FreeConsole();
+                if (AttachConsole((uint)_psProcess.Id))
+                {
+                    SetConsoleCtrlHandler(IntPtr.Zero, true);
+                    GenerateConsoleCtrlEvent(CTRL_C_EVENT, 0);
+                    Thread.Sleep(100);
+                    FreeConsole();
+                    SetConsoleCtrlHandler(IntPtr.Zero, false);
+                }
             }
-            catch (IOException ex)
+            catch
             {
-                throw new InvalidOperationException("Failed to stop command.", ex);
+                // Last resort: kill child processes
+                throw new InvalidOperationException("Failed to send stop signal");
             }
         }
 

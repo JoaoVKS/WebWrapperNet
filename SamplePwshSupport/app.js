@@ -150,7 +150,7 @@ webWrap.onMessage("pwshResult", (message) => {
         return;
     }
     if (message.output) {
-        manager.updateCardOutputMessage(message.requestId, `\n${message.output}`, message.isRunning ?? true);
+        manager.updateCardOutput(message.requestId, `\n${message.output}`, message.isRunning ?? true);
     }
     if (message.isRunning === false) {
         manager.removeCard(message.requestId);
