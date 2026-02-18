@@ -70,23 +70,22 @@ namespace WebWrap.Controllers
                     responseHeaders[header.Key] = string.Join(", ", header.Value);
                 }
 
-                var result = new HttpResponseResult
-                {
+                var result = new HttpResponseResult(requestId) { 
+                    Type = "httpResponse", 
                     Status = (int)response.StatusCode,
                     StatusText = response.ReasonPhrase,
                     Headers = responseHeaders,
                     Body = responseBody,
-                    RequestId = requestId
                 };
+
                 return result;
             }
             catch (Exception ex)
             {
-                return new HttpResponseResult
+                return new HttpResponseResult(requestId)
                 {
                     Type = "httpError",
                     StatusText = JsonSerializer.Serialize(ex.Message),
-                    RequestId = requestId,
                 };
             }
         }
