@@ -1,4 +1,3 @@
-const webWrap = new WebWrapClient();
 const $ = id => document.getElementById(id);
 
 async function send() {
@@ -18,10 +17,10 @@ async function send() {
   $('response').textContent = '';
 
   try {
-    // use the web wrapper proxy to make the HTTP request via the .NET side, 
-    // which allows us to bypass CORS and other browser limitations
+      // use the web wrapper proxy to make the HTTP request via the .NET side, 
+      // which allows us to bypass CORS and other browser limitations
       //url = the URL to request, options = { method, headers, body, contentType }
-      const res = await fetch(url, options);
+      const res = await webWrap.ProxyFetch(url, options);
 
     const statusText = `Status: ${res.status} ${res.statusText || ''}`;
     $('status').textContent = statusText;
