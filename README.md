@@ -5,6 +5,7 @@ A simple wrapper to turn web applications into desktop applications using WebVie
 
 ## How to use
 1. Open the powershell in your `index.html` folder and run: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/v1.0.0/WebWrapperNet_EXE.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
+2. Run the `.exe`
 
 Or
 
@@ -38,6 +39,7 @@ Um wrapper simples para transformar aplicações web em aplicações desktop usa
 
 ## Como usar
 1. Abra o powershell na pasta do seu `index.html` e execute o comando: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/v1.0.0/WebWrapperNet_EXE.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
+2. Execute o `.exe`
 
 Ou
 
