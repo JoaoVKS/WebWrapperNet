@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using WebWrap.Models;
+using System.Management;
 
 namespace WebWrap.Controllers
 {
@@ -216,6 +217,9 @@ namespace WebWrap.Controllers
                 {
                     try
                     {
+                        // Kill all child processes recursively
+                        KillChildProcesses(_psProcess);
+                        
                         _psProcess.Kill();
                         _psProcess.WaitForExit(TimeSpan.FromSeconds(2));
                     }
@@ -229,6 +233,62 @@ namespace WebWrap.Controllers
             }
 
             _disposed = true;
+        }
+
+        private void KillChildProcesses(Process process)
+        {
+            try
+            {
+                var children = GetChildProcesses(process.Id);
+                foreach (var child in children)
+                {
+                    try
+                    {
+                        KillChildProcesses(child);
+                        child.Kill();
+                        child.WaitForExit(TimeSpan.FromSeconds(1));
+                        child.Dispose();
+                    }
+                    catch
+                    {
+                        // Ignore errors killing individual child processes
+                    }
+                }
+            }
+            catch
+            {
+                // Ignore errors getting child processes
+            }
+        }
+
+        private List<Process> GetChildProcesses(int parentId)
+        {
+            var children = new List<Process>();
+            try
+            {
+                using (var searcher = new ManagementObjectSearcher(
+                    $"SELECT ProcessId FROM Win32_Process WHERE ParentProcessId = {parentId}"))
+                {
+                    foreach (ManagementObject obj in searcher.Get())
+                    {
+                        try
+                        {
+                            int childId = Convert.ToInt32(obj["ProcessId"]);
+                            var childProcess = Process.GetProcessById(childId);
+                            children.Add(childProcess);
+                        }
+                        catch
+                        {
+                            // Process might have exited, ignore
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Ignore errors querying WMI
+            }
+            return children;
         }
     }
 }

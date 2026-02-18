@@ -63,7 +63,12 @@ class PwshCard {
             return;
         }
         this.output.textContent += `${text}`;
-        this.output.scrollTop = this.output.scrollHeight;
+        // Get the parent container that has overflow
+        const container = this.output.parentElement;
+        // Use a small timeout to ensure DOM has updated
+        setTimeout(() => {
+            container.scrollTop = container.scrollHeight;
+        }, 0);
     }
 
     setStatus(status) {
