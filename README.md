@@ -5,7 +5,7 @@ A simple wrapper to turn web applications into desktop applications using WebVie
 Exposes WebMessages to allow communication between the web page and the wrapper, allowing you to execute code in the wrapper using JavaScript 🚀.
 
 ## How to use
-1. Open the powershell in your `index.html` folder and run: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/V1.0.2/WepWrapperNet_Required.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
+1. Open the powershell in your `index.html` folder and run: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/v1.0.2/WepWrapperNet_Required.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
 2. Run the `.exe`
 
 Or
@@ -32,10 +32,10 @@ WebWrapper will:
 ## Samples
 ### SampleHttpRequest:
 Sample of how to use the WebWrapperNet WebMessages to make requests using JavaScript
-- Download: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/V1.0.2/WebWrapper_SampleHttp.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
+- Download: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/v1.0.2/WebWrapper_SampleHttp.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
 ### SamplePowerShell
 Sample of how to use the WebWrapperNet WebMessages to execute PowerShell commands using JavaScript
-- Download: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/V1.0.2/WebWrapper_SamplePowershell.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
+- Download: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/v1.0.2/WebWrapper_SamplePowershell.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
 
 ## Requirements
 
@@ -50,7 +50,7 @@ Um wrapper simples para transformar aplicações web em aplicações desktop usa
 Dispõe de WebMessages para permitir a comunicação entre a página web e o wrapper, permitindo que você execute código no wrapper usando JavaScript 🚀.
 
 ## Como usar
-1. Abra o powershell na pasta do seu `index.html` e execute o comando: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/V1.0.2/WepWrapperNet_Required.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
+1. Abra o powershell na pasta do seu `index.html` e execute o comando: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/v1.0.2/WepWrapperNet_Required.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
 2. Execute o `.exe`
 
 Ou
@@ -77,10 +77,10 @@ O WebWrapper irá:
 ## Exemplos
 ### SampleHttpRequest:
 Exemplo de como usar as WebMessages do WebWrapperNet para fazer requisições usando JavaScript
-- Download: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/V1.0.2/WebWrapper_SampleHttp.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
+- Download: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/v1.0.2/WebWrapper_SampleHttp.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
 ### SamplePowerShell
 Exemplo de como usar as WebMessages do WebWrapperNet para executar comandos do PowerShell usando JavaScript
-- Download: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/V1.0.2/WebWrapper_SamplePowershell.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
+- Download: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/v1.0.2/WebWrapper_SamplePowershell.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
 
 ## Requisitos
 
