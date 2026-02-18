@@ -2,9 +2,10 @@
 
 
 A simple wrapper to turn web applications into desktop applications using WebView.
+Exposes WebMessages to allow communication between the web page and the wrapper, allowing you to execute code in the wrapper using JavaScript 🚀.
 
 ## How to use
-1. Open the powershell in your `index.html` folder and run: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/v1.0.0/WebWrapperNet_EXE.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
+1. Open the powershell in your `index.html` folder and run: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/V1.0.1/WepWrapperNet_Required.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
 2. Run the `.exe`
 
 Or
@@ -26,6 +27,14 @@ WebWrapper will:
 - Automatically load the page title and icon
 - Expose an HTTP proxy for requests
 
+## Samples
+### SampleHttpRequest:
+Sample of how to use the WebWrapperNet WebMessages to make requests using JavaScript
+- Download: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/V1.0.1/WebWrapper_SampleHttp.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
+### SamplePowerShell
+Sample of how to use the WebWrapperNet WebMessages to execute PowerShell commands using JavaScript
+- Download: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/V1.0.1/WebWrapper_SamplePowershell.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
+
 ## Requirements
 
 - .NET 10 — https://dotnet.microsoft.com/en-us/download/dotnet/10.0
@@ -35,10 +44,11 @@ WebWrapper will:
 
 # <img width="50px" height="40px" alt="icon" src="https://github.com/user-attachments/assets/6ad63636-804e-49f2-b1b7-dc414d72e35f" /> WebWrapperNet
 
-Um wrapper simples para transformar aplicações web em aplicações desktop usando WebView.
+Um wrapper simples para transformar aplicações web em aplicações desktop usando WebView. 
+Dispõe de WebMessages para permitir a comunicação entre a página web e o wrapper, permitindo que você execute código no wrapper usando JavaScript 🚀.
 
 ## Como usar
-1. Abra o powershell na pasta do seu `index.html` e execute o comando: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/v1.0.0/WebWrapperNet_EXE.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
+1. Abra o powershell na pasta do seu `index.html` e execute o comando: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/V1.0.1/WepWrapperNet_Required.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
 2. Execute o `.exe`
 
 Ou
@@ -59,6 +69,14 @@ O WebWrapper irá:
 - Abrir uma janela com o conteúdo do `index.html` usando o protocolo `file://`
 - Carregar automaticamente o título e ícone da página
 - Disponibilizar um proxy para requisições HTTP
+
+## Exemplos
+### SampleHttpRequest:
+Exemplo de como usar as WebMessages do WebWrapperNet para fazer requisições usando JavaScript
+- Download: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/V1.0.1/WebWrapper_SampleHttp.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
+### SamplePowerShell
+Exemplo de como usar as WebMessages do WebWrapperNet para executar comandos do PowerShell usando JavaScript
+- Download: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/V1.0.1/WebWrapper_SamplePowershell.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
 
 ## Requisitos
 
