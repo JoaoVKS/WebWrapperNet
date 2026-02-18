@@ -2,7 +2,9 @@ class WebWrapClient {
     constructor() {
         this.handlers = new Map();
         window.chrome?.webview?.addEventListener("message", (event) => {
+            //RECEIVE MESSAGES
             const message = event.data;
+            let filteredMessage = '';
             if (!message?.type) {
                 return;
             }
@@ -12,20 +14,19 @@ class WebWrapClient {
     }
 
     sendMessage(type, data = {}) {
+        //SEND MESSAGES
         const payload = {
             type,
             requestId: data.requestId || crypto.randomUUID(),
             ...data
         };
         window.chrome?.webview?.postMessage(payload);
-        console.log("SENT:", type, payload);
         return payload.requestId;
     }
 
     onMessage(type, callback) {
         const list = this.handlers.get(type) || [];
         list.push(callback);
-        console.log("RECEIVED:", type, callback);
         this.handlers.set(type, list);
     }
 
@@ -89,3 +90,5 @@ class WebWrapClient {
 }
 
 window.WebWrapClient = WebWrapClient;
+// Create a global instance of the WebWrapClient to be used throughout the app
+const webWrap = new WebWrapClient();

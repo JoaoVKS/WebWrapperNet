@@ -1,4 +1,3 @@
-const webWrap = new WebWrapClient();
 const grid = document.getElementById("card-grid");
 const newInstanceBtn = document.getElementById("new-instance");
 const cardTemplate = document.getElementById("pwsh-card-template");
