@@ -89,11 +89,3 @@ class WebWrapClient {
 }
 
 window.WebWrapClient = WebWrapClient;
-
-// Backward compatibility: create a global webWrapper object with ProxyFetch method
-const webWrapper = {
-    ProxyFetch: function(url, options = {}) {
-        const client = new WebWrapClient();
-        return client.ProxyFetch(url, options);
-    }
-};
