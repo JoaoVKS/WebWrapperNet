@@ -46,43 +46,6 @@ class WebWrapClient {
         return this.sendMessage("pwshStop", { requestId });
     }
 
-    // HTTP methods
-    async ProxyFetch(url, options = {}) {
-        return new Promise((resolve, reject) => {
-            const requestId = crypto.randomUUID();
-            const handler = (event) => {
-                const data = event.data;
-                if (data.requestId !== requestId) return;
-                window.chrome.webview.removeEventListener('message', handler);
-                if (data.type === 'httpResponse') {
-                    resolve({
-                        ok: data.status >= 200 && data.status < 300,
-                        status: data.status,
-                        statusText: data.statusText,
-                        headers: data.headers,
-                        text: async () => data.body,
-                        json: async () => JSON.parse(data.body)
-                    });
-                } else if (data.type === 'httpError') {
-                    data.statusText = this._decodeUnicodeEscapes(data.statusText);
-                    reject(new Error(this._decodeUnicodeEscapes(data.statusText) || 'HTTP request failed'));
-                    console.error('HTTP request error:', this._decodeUnicodeEscapes(data.statusText), data);
-                }
-            };
-            window.chrome.webview.addEventListener('message', handler);
-            const message = {
-                type: 'httpRequest',
-                requestId: requestId,
-                url: url,
-                method: options.method || 'GET',
-                headers: options.headers || {},
-                body: options.body,
-                contentType: options.contentType || 'application/json'
-            };
-            window.chrome.webview.postMessage(message);
-        });
-    }
-
     _decodeUnicodeEscapes(s) {
         return s.replace(/\\u([\dA-Fa-f]{4})/g, (_, h) => String.fromCharCode(parseInt(h, 16)));
     }

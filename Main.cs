@@ -74,14 +74,24 @@ namespace WebWrap
                     await HandleWebMessageAsync(args);
                 };
 
-                string htmlPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "index.html");
-                if (File.Exists(htmlPath))
+                // Wait for the server to start and get the URL
+                string? navigationUrl = Program.ServerUrl;
+                if (!string.IsNullOrEmpty(navigationUrl))
                 {
-                    webView.CoreWebView2.Navigate("file:///" + htmlPath.Replace("\\", "/"));
+                    webView.CoreWebView2.Navigate(navigationUrl);
                 }
                 else
                 {
-                    webView.CoreWebView2.NavigateToString("<h1 style='color:white'>index.html not found!</h1><p style='color:white'>Place it in the same folder as the .exe</p>");
+                    // Fallback if server didn't start
+                    string htmlPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "index.html");
+                    if (File.Exists(htmlPath))
+                    {
+                        webView.CoreWebView2.Navigate("file:///" + htmlPath.Replace("\\", "/"));
+                    }
+                    else
+                    {
+                        webView.CoreWebView2.NavigateToString("<h1 style='color:white'>index.html not found!</h1><p style='color:white'>Place it in the same folder as the .exe</p>");
+                    }
                 }
             }
             catch (Exception ex)
