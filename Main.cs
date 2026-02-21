@@ -22,6 +22,7 @@ namespace WebWrap
         private Task _asyncOutputTask;
 
         const string MSG_HTTP_REQUEST = "httpRequest";
+        const string MSG_BRWS_RELOAD = "brwsReload";
         const string MSG_PWSH_NEW = "pwshNew";
         const string MSG_PWSH_INPUT = "pwshInput";
         const string MSG_PWSH_KILL = "pwshKill";
@@ -116,6 +117,9 @@ namespace WebWrap
                     case MSG_HTTP_REQUEST:
                         await HandleHttpRequestAsync(message, requestId);
                         break;
+                    case MSG_BRWS_RELOAD:
+                        await HandleBrwsReload();
+                        break;
                     case MSG_PWSH_NEW:
                         await HandlePwshNewAsync(message, requestId);
                         break;
@@ -139,11 +143,44 @@ namespace WebWrap
                 PostErrorMessage($"Error processing request: {ex.Message}");
             }
         }
-
         private async Task HandleHttpRequestAsync(JsonElement message, string requestId)
         {
             var result = await httpController!.SendHttpRequest(message, requestId);
             webView.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(result, JsonOptions));
+        }
+
+        private async Task HandleBrwsReload()
+        {
+            try
+            {
+                List<PwshProcess> processesToDispose;
+                lock (_processListLock)
+                {
+                    processesToDispose = processList.ToList();
+                }
+
+                foreach (var process in processesToDispose)
+                {
+                    try
+                    {
+                        process.Dispose();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Error disposing process {process.RequestId}: {ex.Message}");
+                    }
+                }
+
+                processList = new ConcurrentBag<PwshProcess>();
+
+                await webView.CoreWebView2.CallDevToolsProtocolMethodAsync("Network.clearBrowserCache", "{}");
+                webView.CoreWebView2.Reload();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error reloading browser: {ex.Message}");
+                PostErrorMessage($"Error reloading browser: {ex.Message}");
+            }
         }
 
         private async Task HandlePwshNewAsync(JsonElement message, string requestId)
@@ -378,13 +415,16 @@ namespace WebWrap
                         try
                         {
                             string output = process.GetIncrementalOutput();
-                            PostWebMessage(new PwshResult(process.RequestId)
+                            if (!string.IsNullOrEmpty(output))
                             {
-                                Type = MSG_PWSH_ASYNC_OUTPUT,
-                                Status = 0,
-                                Output = output,
-                                IsRunning = process.IsRunning
-                            });
+                                PostWebMessage(new PwshResult(process.RequestId)
+                                {
+                                    Type = MSG_PWSH_ASYNC_OUTPUT,
+                                    Status = 0,
+                                    Output = output,
+                                    IsRunning = process.IsRunning
+                                });
+                            }
                         }
                         catch (Exception ex)
                         {
