@@ -372,7 +372,7 @@ namespace WebWrap
             {
                 string filePath = message.GetProperty("filePath").GetString() ?? string.Empty;
                 string content = message.GetProperty("content").GetString() ?? string.Empty;
-
+                filePath = Helper.GetActualPath(filePath);
                 if (string.IsNullOrEmpty(filePath))
                 {
                     PostWebMessage(new PwshResult(requestId)
@@ -383,18 +383,6 @@ namespace WebWrap
                     });
                     return;
                 }
-
-                if (!Helper.IsFileText(filePath))
-                {
-                    PostWebMessage(new PwshResult(requestId)
-                    {
-                        Type = MSG_FILE_WRITE,
-                        Status = 1,
-                        Output = "File is not a text file"
-                    });
-                    return;
-                }
-
                 await File.WriteAllTextAsync(filePath, content);
                 PostWebMessage(new PwshResult(requestId)
                 {
@@ -419,6 +407,7 @@ namespace WebWrap
             try
             {
                 string filePath = element.GetProperty("filePath").GetString() ?? string.Empty;
+                filePath = Helper.GetActualPath(filePath);
                 if (!Helper.IsFileText(filePath))
                 {
                     PostWebMessage(new PwshResult(requestId)
@@ -455,7 +444,7 @@ namespace WebWrap
             {
                 string filePath = message.GetProperty("filePath").GetString() ?? string.Empty;
                 string searchText = message.GetProperty("searchText").GetString() ?? string.Empty;
-
+                filePath = Helper.GetActualPath(filePath);
                 if (string.IsNullOrEmpty(searchText) || !Helper.IsFileText(filePath))
                 {
                     PostWebMessage(new PwshResult(requestId)
@@ -721,6 +710,8 @@ namespace WebWrap
                     return new URL('/favicon.ico', location.href).href;
                 })()");
 
+
+                await webView.ExecuteScriptAsync("const basePATH = '" + Directory.GetCurrentDirectory().ToString().Replace("\\", "\\\\") + "';");
                 var faviconHref = Helper.ParseJsString(faviconHrefJson);
                 if (string.IsNullOrWhiteSpace(faviconHref))
                     return;
