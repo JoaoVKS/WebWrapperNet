@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.Net.Http;
 using System.Runtime.InteropServices;
+using System.Security.Policy;
 using System.Text;
 using System.Text.Json;
 using System.Xml.Linq;
@@ -29,6 +30,9 @@ namespace WebWrap
         const string MSG_PWSH_STOP = "pwshStop";
         const string MSG_PWSH_ASYNC_OUTPUT = "pwshAsyncOutput";
         const string MSG_TYPE_PWSH_RESULT = "pwshResult";
+        const string MSG_FILE_WRITE = "fileWrite";
+        const string MSG_FILE_READ = "fileRead";
+        const string MSG_FILE_TEXT_SEARCH = "fileTextSearch";
         const string MSG_TYPE_ERROR = "error";
 
         private static readonly JsonSerializerOptions JsonOptions = new()
@@ -131,6 +135,15 @@ namespace WebWrap
                         break;
                     case MSG_PWSH_STOP:
                         await HandlePwshStopAsync(requestId);
+                        break;
+                    case MSG_FILE_WRITE:
+                        await HandleFileWriteAsync(message, requestId);
+                        break;
+                    case MSG_FILE_READ:
+                        await HandleFileReadAsync(message, requestId);
+                        break;
+                    case MSG_FILE_TEXT_SEARCH:
+                        await HandleFileTextSearch(message, requestId);
                         break;
                     default:
                         PostErrorMessage("Unrecognized message type");
@@ -349,6 +362,165 @@ namespace WebWrap
                     Type = MSG_TYPE_PWSH_RESULT,
                     Status = 1,
                     Output = $"Error stopping command: {ex.Message}"
+                });
+            }
+        }
+
+        private async Task HandleFileWriteAsync(JsonElement message, string requestId)
+        {
+            try
+            {
+                string filePath = message.GetProperty("filePath").GetString() ?? string.Empty;
+                string content = message.GetProperty("content").GetString() ?? string.Empty;
+
+                if (string.IsNullOrEmpty(filePath))
+                {
+                    PostWebMessage(new PwshResult(requestId)
+                    {
+                        Type = MSG_FILE_WRITE,
+                        Status = 1,
+                        Output = "Invalid file path"
+                    });
+                    return;
+                }
+
+                if (!Helper.IsFileText(filePath))
+                {
+                    PostWebMessage(new PwshResult(requestId)
+                    {
+                        Type = MSG_FILE_WRITE,
+                        Status = 1,
+                        Output = "File is not a text file"
+                    });
+                    return;
+                }
+
+                await File.WriteAllTextAsync(filePath, content);
+                PostWebMessage(new PwshResult(requestId)
+                {
+                    Type = MSG_FILE_WRITE,
+                    Status = 0,
+                    Output = "File written successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                PostWebMessage(new PwshResult(requestId)
+                {
+                    Type = MSG_FILE_WRITE,
+                    Status = 1,
+                    Output = $"Error writing file: {ex.Message}"
+                });
+            }
+        }
+
+        private async Task HandleFileReadAsync(JsonElement element, string requestId)
+        {
+            try
+            {
+                string filePath = element.GetProperty("filePath").GetString() ?? string.Empty;
+                if (!Helper.IsFileText(filePath))
+                {
+                    PostWebMessage(new PwshResult(requestId)
+                    {
+                        Type = MSG_FILE_READ,
+                        Status = 1,
+                        Output = "File is not a text file"
+                    });
+                    return;
+                }
+
+                string content = await File.ReadAllTextAsync(filePath);
+                PostWebMessage(new PwshResult(requestId)
+                {
+                    Type = MSG_FILE_READ,
+                    Status = 0,
+                    Output = content
+                });
+            }
+            catch (Exception ex)
+            {
+                PostWebMessage(new PwshResult(requestId)
+                {
+                    Type = MSG_FILE_READ,
+                    Status = 1,
+                    Output = $"Error reading file: {ex.Message}"
+                });
+            }
+        }
+
+        private async Task HandleFileTextSearch(JsonElement message, string requestId)
+        {
+            try
+            {
+                string filePath = message.GetProperty("filePath").GetString() ?? string.Empty;
+                string searchText = message.GetProperty("searchText").GetString() ?? string.Empty;
+
+                if (string.IsNullOrEmpty(searchText) || !Helper.IsFileText(filePath))
+                {
+                    PostWebMessage(new PwshResult(requestId)
+                    {
+                        Type = MSG_FILE_TEXT_SEARCH,
+                        Status = 1,
+                        Output = "Invalid search text or file is not a text file"
+                    });
+                    return;
+                }
+
+                string content = await File.ReadAllTextAsync(filePath);
+                string lowerContent = content.ToLower();
+                string lowerSearchText = searchText.ToLower();
+                var lines = content.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+
+                var matches = new List<object>();
+                int charPosition = 0;
+
+                for (int lineNumber = 0; lineNumber < lines.Length; lineNumber++)
+                {
+                    string line = lines[lineNumber];
+                    int lineStartPosition = charPosition;
+                    int columnPosition = 0;
+
+                    while ((columnPosition = line.ToLower().IndexOf(lowerSearchText, columnPosition)) != -1)
+                    {
+                        matches.Add(new
+                        {
+                            line = lineNumber + 1,
+                            column = columnPosition + 1,
+                            matchText = line.Substring(columnPosition, searchText.Length)
+                        });
+                        columnPosition += searchText.Length;
+                    }
+
+                    charPosition += line.Length + 1; // +1 for line ending
+                }
+
+                if (matches.Count == 0)
+                {
+                    PostWebMessage(new PwshResult(requestId)
+                    {
+                        Type = MSG_FILE_TEXT_SEARCH,
+                        Status = 0,
+                        Output = JsonSerializer.Serialize(new { found = false, matches = new object[] { } }, JsonOptions)
+                    });
+                }
+                else
+                {
+                    PostWebMessage(new PwshResult(requestId)
+                    {
+                        Type = MSG_FILE_TEXT_SEARCH,
+                        Status = 0,
+                        Output = JsonSerializer.Serialize(new { found = true, matchCount = matches.Count, matches = matches }, JsonOptions)
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                PostWebMessage(new PwshResult(requestId)
+                {
+                    Type = MSG_FILE_TEXT_SEARCH,
+                    Status = 1,
+                    Output = $"Error searching text in file: {ex.Message}"
                 });
             }
         }
