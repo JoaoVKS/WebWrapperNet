@@ -13,15 +13,18 @@ namespace WebWrap.Controllers
     {
         public static string GetFullMetricsJson()
         {
+            var ramMetrics = GetRamMetrics();
+            var ramTotal = ramMetrics.Total;
+            var ramUsed = ramMetrics.Used;
             var metrics = new SystemMetrics
             {
                 // 1. CPU (%)
                 CpuUsagePercent = GetCpuUsage(),
 
                 // 2. RAM (GB)
-                RamTotalGB = GetRamMetrics().Total,
-                RamUsedGB = GetRamMetrics().Used,
-                RamFreeGB = GetRamMetrics().Free,
+                RamTotalGB = ramTotal,
+                RamUsedGB = ramUsed,
+                RamFreeGB = Math.Round(ramTotal - ramUsed, 2),
 
                 // 3. Storage (disk)
                 Storage = GetStorageMetrics(),
@@ -79,7 +82,6 @@ namespace WebWrap.Controllers
             {
                 Total = Math.Round(totalMemory, 2),
                 Used = Math.Round(usedMemory, 2),
-                Free = Math.Round(totalMemory - usedMemory, 2)
             };
         }
 
@@ -107,6 +109,10 @@ namespace WebWrap.Controllers
             catch
             {
                 // Acesso negado ou sensores não suportados via WMI
+                return new List<TemperatureMetric>
+                {
+                    new TemperatureMetric { Name = "N/A", Celsius = 0 }
+                };
             }
             return temps;
         }

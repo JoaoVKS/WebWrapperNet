@@ -33,6 +33,7 @@ namespace WebWrap
         const string MSG_FILE_WRITE = "fileWrite";
         const string MSG_FILE_READ = "fileRead";
         const string MSG_FILE_TEXT_SEARCH = "fileTextSearch";
+        const string MSG_SYS_INFO = "sysInfo";
         const string MSG_TYPE_ERROR = "error";
 
         private static readonly JsonSerializerOptions JsonOptions = new()
@@ -144,6 +145,9 @@ namespace WebWrap
                         break;
                     case MSG_FILE_TEXT_SEARCH:
                         await HandleFileTextSearch(message, requestId);
+                        break;
+                    case MSG_SYS_INFO:
+                        await HandleSystemInfo(requestId);
                         break;
                     default:
                         PostErrorMessage("Unrecognized message type");
@@ -419,7 +423,7 @@ namespace WebWrap
                     return;
                 }
 
-                string content = await File.ReadAllTextAsync(filePath);
+                string content = File.ReadAllText(filePath);
                 PostWebMessage(new PwshResult(requestId)
                 {
                     Type = MSG_FILE_READ,
@@ -456,7 +460,7 @@ namespace WebWrap
                     return;
                 }
 
-                string content = await File.ReadAllTextAsync(filePath);
+                string content = File.ReadAllText(filePath);
                 string lowerContent = content.ToLower();
                 string lowerSearchText = searchText.ToLower();
                 var lines = content.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
@@ -510,6 +514,29 @@ namespace WebWrap
                     Type = MSG_FILE_TEXT_SEARCH,
                     Status = 1,
                     Output = $"Error searching text in file: {ex.Message}"
+                });
+            }
+        }
+
+        private async Task HandleSystemInfo( string requestId)
+        {
+            try
+            {
+                var sysInfo = SystemMonitorController.GetFullMetricsJson();
+                PostWebMessage(new PwshResult(requestId)
+                {
+                    Type = MSG_SYS_INFO,
+                    Status = 0,
+                    Output = sysInfo
+                });
+            }
+            catch (Exception ex)
+            {
+                PostWebMessage(new PwshResult(requestId)
+                {
+                    Type = MSG_SYS_INFO,
+                    Status = 1,
+                    Output = $"Error fetching system info: {ex.Message}"
                 });
             }
         }
@@ -710,8 +737,7 @@ namespace WebWrap
                     return new URL('/favicon.ico', location.href).href;
                 })()");
 
-
-                await webView.ExecuteScriptAsync("const basePATH = '" + Directory.GetCurrentDirectory().ToString().Replace("\\", "\\\\") + "';");
+               
                 var faviconHref = Helper.ParseJsString(faviconHrefJson);
                 if (string.IsNullOrWhiteSpace(faviconHref))
                     return;
