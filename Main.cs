@@ -1,3 +1,4 @@
+using AngleSharp.Dom;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
 using System.Collections.Concurrent;
@@ -34,6 +35,7 @@ namespace WebWrap
         const string MSG_FILE_READ = "fileRead";
         const string MSG_FILE_TEXT_SEARCH = "fileTextSearch";
         const string MSG_SYS_INFO = "sysInfo";
+        const string MSG_RAW_TO_MD = "rawToMd";
         const string MSG_TYPE_ERROR = "error";
 
         private static readonly JsonSerializerOptions JsonOptions = new()
@@ -148,6 +150,9 @@ namespace WebWrap
                         break;
                     case MSG_SYS_INFO:
                         await HandleSystemInfo(requestId);
+                        break;
+                    case MSG_RAW_TO_MD:
+                        await HandleRawToMarkdownAsync(message, requestId);
                         break;
                     default:
                         PostErrorMessage("Unrecognized message type");
@@ -537,6 +542,31 @@ namespace WebWrap
                     Type = MSG_SYS_INFO,
                     Status = 1,
                     Output = $"Error fetching system info: {ex.Message}"
+                });
+            }
+        }
+
+        private async Task HandleRawToMarkdownAsync(JsonElement message, string requestId)
+        {
+            try
+            {
+                string text = message.GetProperty("text").GetString() ?? string.Empty;
+                LlmContentController contentController = new LlmContentController();
+                string markdown = await contentController.ProcessToMarkdown(Encoding.UTF8.GetBytes(text));
+                PostWebMessage(new PwshResult(requestId)
+                {
+                    Type = MSG_RAW_TO_MD,
+                    Status = 0,
+                    Output = markdown
+                });
+            }
+            catch (Exception ex)
+            {
+                PostWebMessage(new PwshResult(requestId)
+                {
+                    Type = MSG_RAW_TO_MD,
+                    Status = 1,
+                    Output = $"Error converting text to markdown: {ex.Message}"
                 });
             }
         }
