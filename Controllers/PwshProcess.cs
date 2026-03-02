@@ -75,7 +75,8 @@ namespace WebWrap.Controllers
                 UseShellExecute = false,
                 //false for debugging, true for production to avoid console window
                 CreateNoWindow = true,
-                StandardOutputEncoding = Encoding.UTF8
+                StandardOutputEncoding = Encoding.UTF8,
+                StandardInputEncoding = new UTF8Encoding(false)
             };
 
             _psProcess = new Process { StartInfo = startInfo };
