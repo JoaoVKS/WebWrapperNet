@@ -4,10 +4,10 @@
 A simple wrapper to turn web applications into desktop applications using WebView.
 Exposes WebMessages to allow communication between the web page and the wrapper, allowing you to execute code in the wrapper using JavaScript 🚀.
 
-Used in Pwsh.Ai https://github.com/JoaoVKS/Pwsh.ai
+Used in 🤖 [Pwsh.Ai](https://github.com/JoaoVKS/Pwsh.ai)
 
 ## How to use
-1. Open the powershell in your `index.html` folder and run: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/v1.0.2/WepWrapperNet_Required.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
+1. Open the powershell in your `index.html` folder and run: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/v2.0.0/WebWrapV2.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
 2. Run the `.exe`
 
 Or
@@ -47,7 +47,7 @@ WebWrapper will:
 
 ### SampleHttpRequest:
 Sample of how to use the WebWrapperNet WebMessages to make requests using JavaScript
-- Download: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/V1.0.2/WebWrapper_SampleHttp.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
+- Download: <pre>Invoke-WebRequest -Uri "https://github.com/JoaoVKS/WebWrapperNet/releases/download/v2.0.0/webWrapV2SampleHttp.zip" -OutFile "temp.zip"; Expand-Archive -Path "temp.zip" -DestinationPath "."; Remove-Item "temp.zip"</pre>
 
 ## Requirements
 
